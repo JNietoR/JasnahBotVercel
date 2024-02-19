@@ -1,0 +1,33 @@
+{
+  "name": "jasnahbot",
+  "version": "1.0.0",
+  "description": "Bot de telegram para buscar información de libros",
+  "main": "index.js",
+  "engines": {
+    "node": "14.x"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JNietoR/JasnahBot.git"
+  },
+  "author": "JNietoR",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JNietoR/JasnahBot/issues"
+  },
+  "homepage": "https://github.com/JNietoR/JasnahBot#readme",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "dotenv": "^16.4.2",
+    "node-fetch": "^2.6.1",
+    "node-telegram-bot-api": "^0.64.0",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "@types/node-telegram-bot-api": "^0.64.2"
+  }
+}

@@ -1,0 +1,337 @@
+const TelegramBot = require('node-telegram-bot-api');
+require('dotenv').config();
+
+/**
+ * @function startBot
+ * @description Inicia el bot de Telegram y maneja los comandos y mensajes recibidos.
+ * @returns {void}
+ */
+
+async function startBot() {
+    try {
+        const { default: fetch } = await import('node-fetch');
+
+        const token = process.env.TELEGRAM_TOKEN;
+        const bot = new TelegramBot(token, { polling: true });
+
+        const openLibraryAPI = 'https://openlibrary.org/search.json';
+
+        /**
+         * @function createMenuKeyboard
+         * @description Crea el teclado en línea con opciones de menú.
+         * @returns {Object} Objeto con las opciones del teclado en línea.
+         */
+
+        // Función para crear el teclado en línea con las opciones del menú
+        function createMenuKeyboard() {
+            return {
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: 'Busqueda General Libros', callback_data: 'search_books' }],
+                        [{ text: 'Busqueda por género', callback_data: 'search_genre' }, { text: 'Busqueda por isbn', callback_data: 'search_isbn' }],
+                        [{ text: 'Ayuda', callback_data: 'help' }],
+                    ]
+                }
+            };
+        }
+
+
+        /**
+         * @function sendWelcomeMessage
+         * @description Envía el mensaje de bienvenida y el menú al usuario.
+         * @param {number} chatId - ID del chat.
+         * @returns {void}
+         */
+
+        // Función para enviar el mensaje de bienvenida y el menú
+        function sendWelcomeMessage(chatId) {
+            bot.sendMessage(chatId, '¡Bienvenido a  Jasnahbot, en honor a Jasnah Kholin un personaje del Archivo de las tormentas de Brandon Sanderson!, para saber como funciona el bot escribe /help', createMenuKeyboard());
+        }
+
+        /**
+         * @function fetchOpenLibraryData
+         * @description Realiza una solicitud a la API de Open Library para una búsqueda general.
+         * @param {string} query - Término de búsqueda.
+         * @returns {Promise<Object>} Promesa con los datos obtenidos de la API.
+         */
+
+        // Función para realizar la solicitud a la API de Open Library utilizando node-fetch
+        async function fetchOpenLibraryData(query) {
+            // Reemplazar espacios en blanco con %20 en la consulta general
+            const formattedQuery = query.replace(/\s/g, '%20');
+            const url = `${openLibraryAPI}?q=${formattedQuery}`;
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`Error al realizar la solicitud a la API de Open Library. Código de estado: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error(`Error al realizar la búsqueda general: ${error.message}`);
+                throw error;
+            }
+        }
+
+        /**
+         * @function fetchBooksByGenre
+         * @description Realiza una solicitud a la API de Open Library para buscar libros por género.
+         * @param {string} genre - Género de los libros.
+         * @returns {Promise<Object>} Promesa con los datos obtenidos de la API.
+         */        /**
+* @function fetchBooksByISBN
+* @description Realiza una solicitud a la API de Open Library para buscar libros por ISBN.
+* @param {string} isbn - Número ISBN del libro.
+* @returns {Promise<Object>} Promesa con los datos obtenidos de la API.
+*/
+
+        async function fetchBooksByGenre(genre) {
+            // Reemplazar espacios en blanco con %20 en el género
+            const formattedGenre = genre.replace(/\s/g, '%20');
+            const url = `https://openlibrary.org/subjects/${formattedGenre}.json?limit=50`;
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`Error al realizar la solicitud a la API de Open Library. Código de estado: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error(`Error al buscar libros por género: ${error.message}`);
+                throw error;
+            }
+        }
+
+        /**
+         * @function fetchBooksByISBN
+         * @description Realiza una solicitud a la API de Open Library para buscar libros por ISBN.
+         * @param {string} isbn - Número ISBN del libro.
+         * @returns {Promise<Object>} Promesa con los datos obtenidos de la API.
+         */
+
+        async function fetchBooksByISBN(isbn) {
+            const formattedIsbn = isbn.replace(/-/g, ''); // Eliminar guiones del ISBN
+            const url = `https://openlibrary.org/isbn/${formattedIsbn}.json`;
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`Error al realizar la solicitud a la API de Open Library. Código de estado: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error(`Error al buscar libros por ISBN: ${error.message}`);
+                throw error;
+            }
+        }
+
+        /**
+         * @function sendLongMessage
+         * @description Envía mensajes largos dividiéndolos en partes más pequeñas.
+         * @param {number} chatId - ID del chat.
+         * @param {string} message - Mensaje a enviar.
+         * @returns {Promise<void>} Promesa resuelta cuando se completan los envíos.
+         */
+
+        // Función para enviar mensajes largos dividiéndolos en partes más pequeñas
+        async function sendLongMessage(chatId, message) {
+            const maxMessageLength = 4096; // Límite de caracteres para mensajes en Telegram
+
+            // Dividir el mensaje en partes más pequeñas
+            const messageParts = [];
+            while (message.length > 0) {
+                messageParts.push(message.substring(0, maxMessageLength));
+                message = message.substring(maxMessageLength);
+            }
+
+            // Enviar cada parte del mensaje por separado
+            for (const part of messageParts) {
+                await bot.sendMessage(chatId, part, { parse_mode: 'HTML', ...extractMenuOptions(createMenuKeyboard()) });
+            }
+        }
+
+        /**
+         * @function extractMenuOptions
+         * @description Extrae las opciones de menú de un objeto de menú en línea.
+         * @param {Object} menu - Objeto que representa el menú en línea.
+         * @returns {Object} Opciones de menú extraídas.
+         */
+
+
+        // Función para extraer las opciones de menú
+        function extractMenuOptions(menu) {
+            return menu.reply_markup;
+        }
+        /**
+         * @callback MessageCallback
+         * @param {Object} msg - Objeto del mensaje recibido.
+         * @returns {void}
+         */
+
+        /**
+   * @event message
+   * @description Maneja los mensajes recibidos.
+   * @type {MessageCallback}
+   */
+
+        // Maneja los mensajes recibidos
+        bot.on('message', async (msg) => {
+            const chatId = msg.chat.id;
+            const messageText = msg.text;
+
+            /**
+           * @callback CallbackQueryCallback
+           * @param {Object} query - Objeto de la consulta de callback.
+           * @returns {void}
+           */
+
+            if (messageText === '/start') {
+                sendWelcomeMessage(chatId);
+
+
+            } else if (messageText.startsWith('/search')) {
+                var keyword = "/search";
+                const query = messageText.slice(keyword.length).trim();
+                if (query) {
+                    try {
+                        // Realiza la solicitud a la API de Open Library utilizando node-fetch
+                        const openLibraryData = await fetchOpenLibraryData(query);
+
+                        // Procesa la respuesta y envía los resultados al usuario
+                        const books = openLibraryData.docs;
+                        if (books.length > 0) {
+                            const resultMessage = books.map(book => {
+                                const title = book.title || 'No title available';
+                                const authors = book.author_name ? book.author_name.join(', ') : 'No author information';
+                                const firstPublished = book.first_publish_year || 'Publication year not available';
+
+                                return `<b>📘${title}</b>\n` +
+                                    `🤵Author: ${authors}\n` +
+                                    `🗓️First published: ${firstPublished}\n\n`;
+                            }).join('\n');
+
+                            // Utiliza la función sendLongMessage para enviar el mensaje largo
+                            await sendLongMessage(chatId, resultMessage);
+                            bot.sendMessage(chatId, resultMessage, { parse_mode: 'HTML', ...createMenuKeyboard() });
+                        } else {
+                            bot.sendMessage(chatId, 'No se encontraron resultados para la búsqueda.', createMenuKeyboard());
+                        }
+                    } catch (error) {
+                        console.error('Error al realizar la solicitud a la API de Open Library:', error);
+                        bot.sendMessage(chatId, 'Se produjo un error al buscar libros. Por favor, inténtalo de nuevo más tarde.', createMenuKeyboard());
+                    }
+                } else {
+                    bot.sendMessage(chatId, 'Por favor, proporciona un término de búsqueda después de /search.', createMenuKeyboard());
+                }
+
+            } else if (messageText.startsWith('/isbn')) {
+                var keyword = "/isbn";
+                const query = messageText.slice(keyword.length).trim();
+
+                if (query) {
+                    try {
+                        // Realiza la solicitud a la API de Open Library utilizando node-fetch
+                        const openLibraryData = await fetchBooksByISBN(query);
+
+                        // Procesa la respuesta y envía los resultados al usuario
+                        const book = openLibraryData;
+                        if (book.title) {
+                            const resultMessage =
+                                `<b>📘${book.title}</b>\n` +
+                                `🤵Author: ${book.author_name ? book.author_name.join(', ') : 'No author information'}\n` +
+                                `🗓️First published: ${book.first_publish_year || 'Publication year not available'}\n\n`;
+
+                            bot.sendMessage(chatId, resultMessage, { parse_mode: 'HTML', ...createMenuKeyboard() });
+                        } else {
+                            bot.sendMessage(chatId, 'No se encontraron resultados para la búsqueda.', createMenuKeyboard());
+                        }
+                    } catch (error) {
+                        console.error('Error al realizar la solicitud a la API de Open Library:', error);
+                        bot.sendMessage(chatId, 'Se produjo un error al buscar libros. Por favor, inténtalo de nuevo más tarde.', createMenuKeyboard());
+                    }
+                } else {
+                    bot.sendMessage(chatId, 'Por favor, proporciona un término de búsqueda después de /isbn.', createMenuKeyboard());
+                }
+
+
+            } else if (messageText.startsWith('/genre')) {
+                var keyword = "/genre";
+                const query = messageText.slice(keyword.length).trim();
+                if (query) {
+                    try {
+                        // Realiza la solicitud a la API de Open Library utilizando node-fetch
+                        const openLibraryData = await fetchBooksByGenre(query);
+
+                        // Procesa la respuesta y envía los resultados al usuario
+                        const books = openLibraryData.works;
+                        if (books.length > 0) {
+                            const resultMessage = books.map(book => {
+                                const title = book.title || 'No title available';
+                                const authors = book.author_name ? book.author_name.join(', ') : 'No author information';
+                                const firstPublished = book.first_publish_year || 'Publication year not available';
+
+                                return `<b>📘${title}</b>\n` +
+                                    `🤵Author: ${authors}\n` +
+                                    `🗓️First published: ${firstPublished}\n\n`;
+                            }).join('\n');
+
+                            bot.sendMessage(chatId, resultMessage, { parse_mode: 'HTML', ...createMenuKeyboard() });
+                        } else {
+                            bot.sendMessage(chatId, 'No se encontraron resultados para la búsqueda.', createMenuKeyboard());
+                        }
+                    } catch (error) {
+                        console.error('Error al realizar la solicitud a la API de Open Library:', error);
+                        bot.sendMessage(chatId, 'Se produjo un error al buscar libros. Por favor, inténtalo de nuevo más tarde.', createMenuKeyboard());
+                    }
+                } else {
+                    bot.sendMessage(chatId, 'Por favor, proporciona un término de búsqueda después de /genre.', createMenuKeyboard());
+                }
+
+
+            } else if (messageText === '/help') {
+                bot.sendMessage(chatId, '¡Bienvenido al bot de ayuda! Aquí puedes encontrar información útil utiliza /search para una busqueda general /n /author para buscar por autor /n /genre para buscar por género.', createMenuKeyboard());
+            }
+
+            else {
+                bot.sendMessage(chatId, 'Comando no reconocido. Utiliza el menú para navegar.', createMenuKeyboard());
+            }
+        });
+
+
+        /**
+   * @event callback_query
+   * @description Maneja las pulsaciones de teclas en línea.
+   * @type {CallbackQueryCallback}
+   */
+
+        // Maneja las pulsaciones de teclas en línea
+        bot.on('callback_query', (query) => {
+            const chatId = query.message.chat.id;
+
+            if (query.data === 'search_books') {
+                // Enviar el comando /search directamente al chat del usuario
+                bot.sendMessage(chatId, '/search seguido de tu busqueda \n Ej: /search Mistborn', createMenuKeyboard());
+            } else if (query.data === 'help') {
+                bot.sendMessage(chatId, 'Utiliza /search para una busqueda general, /genre para buscar por género y /isbn para buscar un libro directamente por su isbn.', createMenuKeyboard());
+            } else if (query.data === 'search_isbn') {
+                bot.sendMessage(chatId, 'Ingrese /isbn seguido del término de búsqueda.\n Ej: /isbn 9780765350381', createMenuKeyboard());
+            } else if (query.data === 'search_genre') {
+                bot.sendMessage(chatId, 'Ingrese /genre seguido del término de búsqueda.\n Ej: /genre fantasy', createMenuKeyboard());
+            }
+        });
+
+    } catch (error) {
+        console.error('Error al importar node-fetch:', error);
+    }
+}
+
+// Llama a la función para iniciar el bot
+startBot();
+
+// https://openlibrary.org/isbn/9780140328721

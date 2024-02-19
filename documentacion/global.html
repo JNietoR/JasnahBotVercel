@@ -1,0 +1,2213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Global</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+    <div id="main">
+
+        <h1 class="page-title">@JasnahBot</h1>
+
+        <section>
+            <h2>¿Que es @JasnahBot @JasnahBot?</h2>
+            <br>
+            <p>JasnahBot es un Bot de telegram que utiliza la API <a
+                    href="https://openlibrary.org/developers/api">Openlibray</a> para obtener información de las
+                peticones del usuario.
+            </p>
+
+            <br>
+
+            <h2>¿Que tipo de busquedas puedes hacer a JasnahBot?</h2>
+            <p>Al entrar en el bot encontraras un teclado con las opciones que tiene y ejemplos de como usar cada uno de
+                ellos</p>
+            <table class="params">
+                <tr>
+                    <th>Busqueda General Libros</th>
+                </tr>
+                <tr>
+                    <td>Para buscar por libros por titulo, saga o autor</td>
+                </tr>
+                <tr>
+                    <td>Ej: /search Brandon Sanderson</td>
+                </tr>
+            </table>
+            <p>La respuesta será del siguiente formato.</p>
+            <pre>
+                <code>
+                                {
+                    "start": 0,
+                    "num_found": 629,
+                    "docs": [
+                        {...},
+                        {...},
+                        ...
+                        {...}]
+                }   
+                </code>
+            </pre>
+            <p>Cada documento especificado en "docs" estará en el siguiente formato:</p>
+            <pre>
+                <code>
+                {
+                    "cover_i": 258027,
+                    "has_fulltext": true,
+                    "edition_count": 120,
+                    "title": "The Lord of the Rings",
+                    "author_name": [
+                        "J. R. R. Tolkien"
+                    ],
+                    "first_publish_year": 1954,
+                    "key": "OL27448W",
+                    "ia": [
+                        "returnofking00tolk_1",
+                        "lordofrings00tolk_1",
+                        "lordofrings00tolk_0"
+                    ],
+                    "author_key": [
+                        "OL26320A"
+                    ],
+                    "public_scan_b": true
+                }
+                </code>
+            </pre>
+
+
+
+            <table class="params">
+                <tr>
+                    <th>Busqueda por género</th>
+                </tr>
+                <tr>
+                    <td>Busca 50 libros del género indicado</td>
+                </tr>
+                <tr>
+                    <td>Ej: /genre fantasy</td>
+                </tr>
+                </tr>
+            </table>
+            <p>La respuesta será del siguiente formato.</p>
+            <pre>
+                <code>
+                                {
+                    "start": 0,
+                    "num_found": 629,
+                    "works": [
+                        {...},
+                        {...},
+                        ...
+                        {...}]
+                }   
+                </code>
+            </pre>
+            <p>Cada documento especificado en "works" estará en el siguiente formato:</p>
+            <pre>
+                <code>
+                    {
+                        "key": "/subjects/love",
+                        "name": "love"
+                        "subject_type": "subject",
+                        "work_count": 4918,
+                        "works": [
+                            {
+                                "key": "/works/OL66534W",
+                                "title": "Pride and prejudice",
+                                "edition_count": 752,
+                                "authors": [
+                                    {
+                                        "name": "Jane Austen",
+                                        "key": "/authors/OL21594A"
+                                    }
+                                ],
+                                "has_fulltext": true,
+                                "ia": "mansfieldparknov03aust",
+                                ...
+                            },
+                            ...
+                        ]
+                    }
+                </code>
+            </pre>
+
+            <table class="params">
+                <tr>
+                    <th>Busqueda por isbn</th>
+                </tr>
+                <tr>
+                    <td>Buscar un libro directamente mediante su isbn</td>
+                </tr>
+                <tr>
+                    <td>Ej: /isbn 9780765350381</td>
+                </tr>
+            </table>
+            <p>Por defecto, la API devuelve la respuesta en formato JavaScript.</p>
+            <p>La API de ISBN es un caso especial y un enfoque alternativo para llegar a una página de ediciones. En
+                lugar de "/books", se utiliza una ruta de "/isbn", seguida de un ISBN 10 o 13 válido.</p>
+            <p>Aquí tienes un ejemplo:</p>
+            <p><a href="https://openlibrary.org/isbn/9780140328721">https://openlibrary.org/isbn/9780140328721</a></p>
+            <p>En este ejemplo, ingresar esta URL resultará en una redirección a la página de ediciones correspondiente:
+            </p>
+            <p><a href="https://openlibrary.org/books/OL7353617M">https://openlibrary.org/books/OL7353617M</a></p>
+            <p>Al igual que en una página de Edición o Trabajo, podemos agregar ".json" al final de la URL para
+                solicitar la respuesta en formato json en lugar de HTML, por ejemplo:</p>
+            <p><a
+                    href="https://openlibrary.org/isbn/9780140328721.json">https://openlibrary.org/isbn/9780140328721.json</a>
+            </p>
+
+            <br>
+
+            <header>
+
+                <h2></h2>
+
+
+            </header>
+
+            <article>
+                <div class="container-overview">
+
+
+
+
+
+
+                    <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </dl>
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h3 class="subsection-title">Methods</h3>
+
+
+
+
+
+
+
+                <h4 class="name" id="createMenuKeyboard"><span class="type-signature"></span>createMenuKeyboard<span
+                        class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+
+
+
+
+
+                <div class="description">
+                    Crea el teclado en línea con opciones de menú.
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line19">line 19</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+
+
+
+
+
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h5>Returns:</h5>
+
+
+                <div class="param-desc">
+                    Objeto con las opciones del teclado en línea.
+                </div>
+
+
+
+                <dl>
+                    <dt>
+                        Type
+                    </dt>
+                    <dd>
+
+                        <span class="param-type">Object</span>
+
+
+                    </dd>
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h4 class="name" id="extractMenuOptions"><span class="type-signature"></span>extractMenuOptions<span
+                        class="signature">(menu)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+
+
+
+
+
+                <div class="description">
+                    Extrae las opciones de menú de un objeto de menú en línea.
+                </div>
+
+
+
+
+
+
+
+
+
+                <h5>Parameters:</h5>
+
+
+                <table class="params">
+                    <thead>
+                        <tr>
+
+                            <th>Name</th>
+
+
+                            <th>Type</th>
+
+
+
+
+
+                            <th class="last">Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td class="name"><code>menu</code></td>
+
+
+                            <td class="type">
+
+
+                                <span class="param-type">Object</span>
+
+
+
+                            </td>
+
+
+
+
+
+                            <td class="description last">Objeto que representa el menú en línea.</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+
+
+
+
+
+
+                <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line159">line 159</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+
+
+
+
+
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h5>Returns:</h5>
+
+
+                <div class="param-desc">
+                    Opciones de menú extraídas.
+                </div>
+
+
+
+                <dl>
+                    <dt>
+                        Type
+                    </dt>
+                    <dd>
+
+                        <span class="param-type">Object</span>
+
+
+                    </dd>
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h4 class="name" id="fetchBooksByGenre"><span class="type-signature"></span>fetchBooksByGenre<span
+                        class="signature">(genre)</span><span class="type-signature"> &rarr;
+                        {Promise.&lt;Object>}</span></h4>
+
+
+
+
+
+
+                <div class="description">
+                    Realiza una solicitud a la API de Open Library para buscar libros por género.
+                </div>
+
+
+
+
+
+
+
+
+
+                <h5>Parameters:</h5>
+
+
+                <table class="params">
+                    <thead>
+                        <tr>
+
+                            <th>Name</th>
+
+
+                            <th>Type</th>
+
+
+
+
+
+                            <th class="last">Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td class="name"><code>genre</code></td>
+
+
+                            <td class="type">
+
+
+                                <span class="param-type">string</span>
+
+
+
+                            </td>
+
+
+
+
+
+                            <td class="description last">Género de los libros.</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+
+
+
+
+
+
+                <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line78">line 78</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+
+
+
+
+
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h5>Returns:</h5>
+
+
+                <div class="param-desc">
+                    Promesa con los datos obtenidos de la API.
+                </div>
+
+
+
+                <dl>
+                    <dt>
+                        Type
+                    </dt>
+                    <dd>
+
+                        <span class="param-type">Promise.&lt;Object></span>
+
+
+                    </dd>
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h4 class="name" id="fetchBooksByISBN"><span class="type-signature"></span>fetchBooksByISBN<span
+                        class="signature">(isbn)</span><span class="type-signature"> &rarr; {Promise.&lt;Object>}</span>
+                </h4>
+
+
+
+
+
+
+                <div class="description">
+                    Realiza una solicitud a la API de Open Library para buscar libros por ISBN.
+                </div>
+
+
+
+
+
+
+
+
+
+                <h5>Parameters:</h5>
+
+
+                <table class="params">
+                    <thead>
+                        <tr>
+
+                            <th>Name</th>
+
+
+                            <th>Type</th>
+
+
+
+
+
+                            <th class="last">Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td class="name"><code>isbn</code></td>
+
+
+                            <td class="type">
+
+
+                                <span class="param-type">string</span>
+
+
+
+                            </td>
+
+
+
+
+
+                            <td class="description last">Número ISBN del libro.</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+
+
+
+
+
+
+                <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line83">line 83</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+
+
+
+
+
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h5>Returns:</h5>
+
+
+                <div class="param-desc">
+                    Promesa con los datos obtenidos de la API.
+                </div>
+
+
+
+                <dl>
+                    <dt>
+                        Type
+                    </dt>
+                    <dd>
+
+                        <span class="param-type">Promise.&lt;Object></span>
+
+
+                    </dd>
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h4 class="name" id="fetchBooksByISBN"><span class="type-signature"></span>fetchBooksByISBN<span
+                        class="signature">(isbn)</span><span class="type-signature"> &rarr; {Promise.&lt;Object>}</span>
+                </h4>
+
+
+
+
+
+
+                <div class="description">
+                    Realiza una solicitud a la API de Open Library para buscar libros por ISBN.
+                </div>
+
+
+
+
+
+
+
+
+
+                <h5>Parameters:</h5>
+
+
+                <table class="params">
+                    <thead>
+                        <tr>
+
+                            <th>Name</th>
+
+
+                            <th>Type</th>
+
+
+
+
+
+                            <th class="last">Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td class="name"><code>isbn</code></td>
+
+
+                            <td class="type">
+
+
+                                <span class="param-type">string</span>
+
+
+
+                            </td>
+
+
+
+
+
+                            <td class="description last">Número ISBN del libro.</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+
+
+
+
+
+
+                <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line109">line 109</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+
+
+
+
+
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h5>Returns:</h5>
+
+
+                <div class="param-desc">
+                    Promesa con los datos obtenidos de la API.
+                </div>
+
+
+
+                <dl>
+                    <dt>
+                        Type
+                    </dt>
+                    <dd>
+
+                        <span class="param-type">Promise.&lt;Object></span>
+
+
+                    </dd>
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h4 class="name" id="fetchOpenLibraryData"><span class="type-signature"></span>fetchOpenLibraryData<span
+                        class="signature">(query)</span><span class="type-signature"> &rarr;
+                        {Promise.&lt;Object>}</span></h4>
+
+
+
+
+
+
+                <div class="description">
+                    Realiza una solicitud a la API de Open Library para una búsqueda general.
+                </div>
+
+
+
+
+
+
+
+
+
+                <h5>Parameters:</h5>
+
+
+                <table class="params">
+                    <thead>
+                        <tr>
+
+                            <th>Name</th>
+
+
+                            <th>Type</th>
+
+
+
+
+
+                            <th class="last">Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td class="name"><code>query</code></td>
+
+
+                            <td class="type">
+
+
+                                <span class="param-type">string</span>
+
+
+
+                            </td>
+
+
+
+
+
+                            <td class="description last">Término de búsqueda.</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+
+
+
+
+
+
+                <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line51">line 51</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+
+
+
+
+
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h5>Returns:</h5>
+
+
+                <div class="param-desc">
+                    Promesa con los datos obtenidos de la API.
+                </div>
+
+
+
+                <dl>
+                    <dt>
+                        Type
+                    </dt>
+                    <dd>
+
+                        <span class="param-type">Promise.&lt;Object></span>
+
+
+                    </dd>
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h4 class="name" id="sendLongMessage"><span class="type-signature"></span>sendLongMessage<span
+                        class="signature">(chatId, message)</span><span class="type-signature"> &rarr;
+                        {Promise.&lt;void>}</span></h4>
+
+
+
+
+
+
+                <div class="description">
+                    Envía mensajes largos dividiéndolos en partes más pequeñas.
+                </div>
+
+
+
+
+
+
+
+
+
+                <h5>Parameters:</h5>
+
+
+                <table class="params">
+                    <thead>
+                        <tr>
+
+                            <th>Name</th>
+
+
+                            <th>Type</th>
+
+
+
+
+
+                            <th class="last">Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td class="name"><code>chatId</code></td>
+
+
+                            <td class="type">
+
+
+                                <span class="param-type">number</span>
+
+
+
+                            </td>
+
+
+
+
+
+                            <td class="description last">ID del chat.</td>
+                        </tr>
+
+
+
+                        <tr>
+
+                            <td class="name"><code>message</code></td>
+
+
+                            <td class="type">
+
+
+                                <span class="param-type">string</span>
+
+
+
+                            </td>
+
+
+
+
+
+                            <td class="description last">Mensaje a enviar.</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+
+
+
+
+
+
+                <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line134">line 134</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+
+
+
+
+
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h5>Returns:</h5>
+
+
+                <div class="param-desc">
+                    Promesa resuelta cuando se completan los envíos.
+                </div>
+
+
+
+                <dl>
+                    <dt>
+                        Type
+                    </dt>
+                    <dd>
+
+                        <span class="param-type">Promise.&lt;void></span>
+
+
+                    </dd>
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h4 class="name" id="sendWelcomeMessage"><span class="type-signature"></span>sendWelcomeMessage<span
+                        class="signature">(chatId)</span><span class="type-signature"> &rarr; {void}</span></h4>
+
+
+
+
+
+
+                <div class="description">
+                    Envía el mensaje de bienvenida y el menú al usuario.
+                </div>
+
+
+
+
+
+
+
+
+
+                <h5>Parameters:</h5>
+
+
+                <table class="params">
+                    <thead>
+                        <tr>
+
+                            <th>Name</th>
+
+
+                            <th>Type</th>
+
+
+
+
+
+                            <th class="last">Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td class="name"><code>chatId</code></td>
+
+
+                            <td class="type">
+
+
+                                <span class="param-type">number</span>
+
+
+
+                            </td>
+
+
+
+
+
+                            <td class="description last">ID del chat.</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+
+
+
+
+
+
+                <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line39">line 39</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+
+
+
+
+
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h5>Returns:</h5>
+
+
+
+
+                <dl>
+                    <dt>
+                        Type
+                    </dt>
+                    <dd>
+
+                        <span class="param-type">void</span>
+
+
+                    </dd>
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h4 class="name" id="startBot"><span class="type-signature"></span>startBot<span
+                        class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+
+
+
+
+
+
+                <div class="description">
+                    Inicia el bot de Telegram y maneja los comandos y mensajes recibidos.
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line4">line 4</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+
+
+
+
+
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h5>Returns:</h5>
+
+
+
+
+                <dl>
+                    <dt>
+                        Type
+                    </dt>
+                    <dd>
+
+                        <span class="param-type">void</span>
+
+
+                    </dd>
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+                <h3 class="subsection-title">Type Definitions</h3>
+
+
+
+
+
+
+
+                <h4 class="name" id="CallbackQueryCallback"><span
+                        class="type-signature"></span>CallbackQueryCallback<span class="signature">(query)</span><span
+                        class="type-signature"> &rarr; {void}</span></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h5>Parameters:</h5>
+
+
+                <table class="params">
+                    <thead>
+                        <tr>
+
+                            <th>Name</th>
+
+
+                            <th>Type</th>
+
+
+
+
+
+                            <th class="last">Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td class="name"><code>query</code></td>
+
+
+                            <td class="type">
+
+
+                                <span class="param-type">Object</span>
+
+
+
+                            </td>
+
+
+
+
+
+                            <td class="description last">Objeto de la consulta de callback.</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+
+
+
+
+
+
+                <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line188">line 188</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+
+
+
+
+
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h5>Returns:</h5>
+
+
+
+
+                <dl>
+                    <dt>
+                        Type
+                    </dt>
+                    <dd>
+
+                        <span class="param-type">void</span>
+
+
+                    </dd>
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h4 class="name" id="MessageCallback"><span class="type-signature"></span>MessageCallback<span
+                        class="signature">(msg)</span><span class="type-signature"> &rarr; {void}</span></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h5>Parameters:</h5>
+
+
+                <table class="params">
+                    <thead>
+                        <tr>
+
+                            <th>Name</th>
+
+
+                            <th>Type</th>
+
+
+
+
+
+                            <th class="last">Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td class="name"><code>msg</code></td>
+
+
+                            <td class="type">
+
+
+                                <span class="param-type">Object</span>
+
+
+
+                            </td>
+
+
+
+
+
+                            <td class="description last">Objeto del mensaje recibido.</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+
+
+
+
+
+
+                <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line171">line 171</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+
+
+
+
+
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h5>Returns:</h5>
+
+
+
+
+                <dl>
+                    <dt>
+                        Type
+                    </dt>
+                    <dd>
+
+                        <span class="param-type">void</span>
+
+
+                    </dd>
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+                <h3 class="subsection-title">Events</h3>
+
+
+
+
+
+
+
+                <h4 class="name" id="event:callback_query">callback_query</h4>
+
+
+
+
+
+
+                <div class="description">
+                    Maneja las pulsaciones de teclas en línea.
+                </div>
+
+
+
+
+
+                <h5>Type:</h5>
+                <ul>
+                    <li>
+
+                        <span class="param-type"><a
+                                href="global.html#CallbackQueryCallback">CallbackQueryCallback</a></span>
+
+
+                    </li>
+                </ul>
+
+
+
+
+
+
+
+
+
+                <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line307">line 307</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+
+
+
+
+
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <h4 class="name" id="event:message">message</h4>
+
+
+
+
+
+
+                <div class="description">
+                    Maneja los mensajes recibidos.
+                </div>
+
+
+
+
+
+                <h5>Type:</h5>
+                <ul>
+                    <li>
+
+                        <span class="param-type"><a href="global.html#MessageCallback">MessageCallback</a></span>
+
+
+                    </li>
+                </ul>
+
+
+
+
+
+
+
+
+
+                <dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <dt class="tag-source">Source:</dt>
+                    <dd class="tag-source">
+                        <ul class="dummy">
+                            <li>
+                                <a href="index.js.html">index.js</a>, <a href="index.js.html#line177">line 177</a>
+                            </li>
+                        </ul>
+                    </dd>
+
+
+
+
+
+
+
+                </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </article>
+
+        </section>
+
+
+
+
+    </div>
+
+    <nav>
+        <h2><a href="index.html">Home</a></h2>
+        <h3>Events</h3>
+        <ul>
+            <li><a href="global.html#event:callback_query">callback_query</a></li>
+            <li><a href="global.html#event:message">message</a></li>
+        </ul>
+        <h3>Global</h3>
+        <ul>
+            <li><a href="global.html#createMenuKeyboard">createMenuKeyboard</a></li>
+            <li><a href="global.html#extractMenuOptions">extractMenuOptions</a></li>
+            <li><a href="global.html#fetchBooksByGenre">fetchBooksByGenre</a></li>
+            <li><a href="global.html#fetchBooksByISBN">fetchBooksByISBN</a></li>
+            <li><a href="global.html#fetchOpenLibraryData">fetchOpenLibraryData</a></li>
+            <li><a href="global.html#sendLongMessage">sendLongMessage</a></li>
+            <li><a href="global.html#sendWelcomeMessage">sendWelcomeMessage</a></li>
+            <li><a href="global.html#startBot">startBot</a></li>
+        </ul>
+    </nav>
+
+    <br class="clear">
+
+    <footer>
+        Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Feb 13 2024 00:57:25
+        GMT+0100 (hora estándar de Europa central)
+    </footer>
+
+    <script> prettyPrint(); </script>
+    <script src="scripts/linenumber.js"> </script>
+</body>
+
+</html>
